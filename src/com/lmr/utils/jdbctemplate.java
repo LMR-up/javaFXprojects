@@ -1,6 +1,11 @@
 package com.lmr.utils;
 
+import com.mysql.cj.jdbc.ConnectionImpl;
+
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +30,44 @@ public class jdbctemplate<T> {
         } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    T findByid(String sql,int id,Class c){
+        T t=null;
+        Connection conn=null;
+        PreparedStatement ps=null;
+        ResultSet rs=null;
+        try {
+            conn=DButil.getconct();
+            ps=conn.prepareStatement(sql);
+            rs=ps.executeQuery();
+            if(rs.next()){
+                Constructor<T> con = c.getDeclaredConstructor();
+                t =  con.newInstance();
+                Field[] fields = c.getFields();//获取属性的集合
+                for (int i=0;i<=fields.length;i++){
+                    fields[i].setAccessible(true);//可访问私有属性
+                    //相当于object.setname(rs.getobject(?))
+                    fields[i].set(t,rs.getObject(i+1));//rs从1开始
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }finally {
+            DButil.closeAll(conn,ps,rs);
+        }
+
+        return t;
     }
 
     List<T> queryAll(String sql, Class c) {  // "select * from t_user" , User.class

@@ -9,11 +9,10 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lombok-1.18.20" level="project" />
-    <orderEntry type="library" name="mysql-connector-java-8.0.26" level="project" />
     <orderEntry type="library" name="javafx-swt" level="project" />
-    <orderEntry type="library" name="log4j-api-2.17.2" level="project" />
     <orderEntry type="library" name="poi-5.2.2" level="project" />
     <orderEntry type="library" name="commons-compress-1.21" level="project" />
     <orderEntry type="library" name="commons-codec-1.15" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-8.0.26" level="project" />
   </component>
 </module>
